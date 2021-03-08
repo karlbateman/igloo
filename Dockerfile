@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 # environment setup
 ENV DEBIAN_FRONTEND noninteractive
-ENV JAVAHOME /usr/lib/jvm/java-8-openjdk-amd64
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 ENV PYTHONUNBUFFERED 1
 
 # install container dependencies
