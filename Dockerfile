@@ -16,8 +16,8 @@ RUN apt-get update \
                 curl \
                 openjdk-8-jdk \
                 python3-pip \
-                python3.7 \
-                python3.7-dev \
+                python3.8 \
+                python3.8-dev \
         && rm -rf /var/lib/apt/lists/* \
     ;
 
@@ -33,26 +33,9 @@ RUN curl -L https://github.com/polynote/polynote/releases/download/0.3.12/polyno
 COPY config.yaml polynote/config.yml
 
 # install additional Python packages
-RUN python3.7 -m pip install --no-cache-dir \
-    # HACK(karlbateman): required by Polynote
-    jedi \
-    jep \
-    # typical datasci packages
-    beautifulsoup4 \
-    deepdiff \
-    langdetect \
-    matplotlib \
-    numpy \
-    pandas \
-    protorpc \
-    pyspark \
-    requests \
-    scikit-learn \
-    scipy \
-    spacy \
-    sqlalchemy \
-    ;
+COPY requirements.txt .
+RUN python3.8 -m pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8192
-ENTRYPOINT [ "python3.7" ]
+ENTRYPOINT [ "python3.8" ]
 CMD ["polynote/polynote.py"]
