@@ -15,15 +15,29 @@ RUN apt-get update \
                 build-essential \
                 curl \
                 openjdk-8-jdk \
-                pandoc \
                 python3-pip \
                 python3.7 \
-                texlive-xetex \
+                python3.7-dev \
         && rm -rf /var/lib/apt/lists/* \
     ;
 
-# download additional Python packages
+# download Polynote and install it's dependencies
+# see https://polynote.org/docs/01-installation.html
+RUN curl -L https://github.com/polynote/polynote/releases/download/0.3.12/polynote-dist.tar.gz | tar -xzvpf - \
+    && cd polynote \
+    && pip3 install -r requirements.txt \
+    && cd - \
+    ;
+
+# add the configuration
+COPY config.yaml polynote/config.yml
+
+# install additional Python packages
 RUN python3.7 -m pip install --no-cache-dir \
+    # HACK(karlbateman): required by Polynote
+    jedi \
+    jep \
+    # typical datasci packages
     beautifulsoup4 \
     deepdiff \
     langdetect \
@@ -39,12 +53,6 @@ RUN python3.7 -m pip install --no-cache-dir \
     sqlalchemy \
     ;
 
-# download Polynote
-RUN curl -L https://github.com/polynote/polynote/releases/download/0.2.8/polynote-dist.tar.gz | tar -xzvpf -
-
-# install the configuration
-COPY config.yaml polynote/config.yml
-
 EXPOSE 8192
-ENTRYPOINT [ "bash" ]
-CMD ["polynote/polynote"]
+ENTRYPOINT [ "python3.7" ]
+CMD ["polynote/polynote.py"]
