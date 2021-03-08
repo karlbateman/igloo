@@ -34,7 +34,7 @@ For mounting a persisted volume, please use the following command.
 docker run --rm --tty --interactive \
   --publish=127.0.0.1:8192:8192 \
   --name=igloo \
-  --volume=~/.data/polynotes:/usr/src/app/polynote/notebooks \
+  --volume=$HOME/.data/polynotes:/usr/src/app/polynote/notebooks \
   karlbateman/igloo \
   ;
 ```
